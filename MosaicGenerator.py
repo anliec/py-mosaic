@@ -15,6 +15,7 @@ def mosaic_generator(path_to_model, number_of_images_x, number_of_images_y):
             target_pixels = pixels_from_part(model_im, x, y)
             best_pictures[(x, y)] = db.get_bests_candidates(target_pixels)
     db.close()
+    return best_pictures
 
 
 def pixels_from_part(image, x, y):

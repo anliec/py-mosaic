@@ -34,9 +34,8 @@ class DataBase:
         self.con = lite.connect('photos.db')
         cur = self.con.cursor()
         if ("photos", ) in cur.execute("select name from sqlite_master where type = 'table';"):
-            print("photos found")
+            pass
         else:
-            print("photos not found")
             self.create_photo_table()
             self.con.commit()
 
@@ -86,7 +85,6 @@ class DataBase:
         request += 'FROM photos '
         request += 'ORDER BY score ASC '
         request += 'LIMIT 0, 20 '
-        print(request)
         # execute the request
         cur = self.con.cursor()
         cur.execute(request)
