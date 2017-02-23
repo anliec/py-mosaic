@@ -17,6 +17,6 @@ def miniature_image_pixels(image_path):
 
 
 def pixelize(image):
-    return list(image.getdata)
+    return list(image.getdata())
 
 

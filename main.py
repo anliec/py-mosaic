@@ -6,12 +6,13 @@ import PhotosManaging
 import databaseFiller
 import MosaicGenerator
 
+mosaic = MosaicGenerator.MosaicGenerator("photosForTests/_DSC0008.JPG", (15, 10))
+print("mosaic set")
+mosaic.found_best_images()
+print("images found")
+image = mosaic.montage((60, 40))
 
-bestpictures = MosaicGenerator.mosaic_generator("photosForTests/_DSC0008.JPG", 15, 10)
-
-result_im = MosaicGenerator.montage(bestpictures, (15, 10), (60, 40))
-
-result_im.show()
+image.show()
 
 # databaseFiller.explore_path('/home/nicolas/Images/2015')
 #

@@ -1,37 +1,55 @@
 #!/usr/bin/python3.6
 from PIL import Image
 import database
+import PhotosManaging
 
 
-def mosaic_generator(path_to_model, number_of_images_x, number_of_images_y):
-    model_im = Image.open(path_to_model)
-    model_im = model_im.resize((3*number_of_images_x, 2*number_of_images_y))
+class MosaicGenerator:
+    # list of best possibility per zone
+    best_images_found = dict()
+    # best image per zone
+    best_images_selected = dict()
 
-    best_pictures = dict()
-    db = database.DataBase()
+    number_of_image = (0, 0)
+    # model data
+    model_path = ""
+    model_im = None
+    target_im = None
 
-    for x in range(0, number_of_images_x):
-        for y in range(0, number_of_images_y):
-            target_pixels = pixels_from_part(model_im, x, y)
-            best_pictures[(x, y)] = db.get_bests_candidates(target_pixels)
-    db.close()
-    return best_pictures
+    def __init__(self, path_to_model, number_of_images):
+        self.number_of_image = number_of_images
+        self.model_path = path_to_model
+        self.model_im = Image.open(self.model_path)
+        self.target_im = self.model_im.resize((3*self.number_of_image[0], 2*self.number_of_image[1]))
 
+    def found_best_images(self):
+        '''set best_images_found with the best possible result from DB
 
-def pixels_from_part(image, x, y):
-    box = (x*3, y*2, x*3+3, y*2+2)
-    region = image.crop(box)
-    return list(region.getdata())
+        set the best_image_selected using the highest score'''
+        self.best_images_found = dict()
+        self.best_images_selected = dict()
+        db = database.DataBase()
+        for x in range(0, self.number_of_image[0]):
+            for y in range(0, self.number_of_image[1]):
+                target_pixels = self.pixels_from_model_part(x, y)
+                best_list = db.get_bests_candidates(target_pixels)
+                self.best_images_found[(x, y)] = best_list
+                self.best_images_selected[(x, y)] = best_list[0]
+        db.close()
 
+    def pixels_from_model_part(self, x, y):
+        box = (x*3, y*2, x*3+3, y*2+2)
+        region = self.target_im.crop(box)
+        return PhotosManaging.pixelize(region)
 
-def montage(best_pictures, number_of_image_xy, size_images):
-    background_size = (number_of_image_xy[0]*size_images[0], number_of_image_xy[1]*size_images[1])
-    background = Image.new('RGB', background_size, (255, 255, 255))
-    for key, value in best_pictures.items():
-        x, y = key
-        image_path = value[0][1]
-        image = Image.open(image_path)
-        image = image.resize(size_images)
-        offset = (x*size_images[0], y*size_images[1])
-        background.paste(image, offset)
-    return background
+    def montage(self, size_images):
+        background_size = (self.number_of_image[0]*size_images[0], self.number_of_image[1]*size_images[1])
+        background = Image.new('RGB', background_size, (255, 255, 255))
+        for key, value in self.best_images_selected.items():
+            x, y = key
+            image_path = value[1]
+            image = Image.open(image_path)
+            image = image.resize(size_images)
+            offset = (x*size_images[0], y*size_images[1])
+            background.paste(image, offset)
+        return background
