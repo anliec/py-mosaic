@@ -1,6 +1,6 @@
 #!/usr/bin/python3.6
 import os
-import database
+from core import database
 
 
 def explore_path(path_to_explore):

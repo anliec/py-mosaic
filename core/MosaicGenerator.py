@@ -1,10 +1,11 @@
 #!/usr/bin/python3.6
 from PIL import Image
-import database
-import PhotosManaging
+from core import database
+from core import PhotosManaging
+from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 
-class MosaicGenerator:
+class MosaicGenerator(QThread):
     # list of best possibility per zone
     best_images_found = dict()
     # best image per zone
@@ -16,7 +17,14 @@ class MosaicGenerator:
     model_im = None
     target_im = None
 
+    #signals
+    selected_images_changed = pyqtSignal(int, int)
+    finished = pyqtSignal()
+    #threading
+    run_target = None
+
     def __init__(self, path_to_model, number_of_images):
+        super(MosaicGenerator, self).__init__()
         self.number_of_image = number_of_images
         self.model_path = path_to_model
         self.model_im = Image.open(self.model_path)
@@ -35,7 +43,9 @@ class MosaicGenerator:
                 best_list = db.get_bests_candidates(target_pixels)
                 self.best_images_found[(x, y)] = best_list
                 self.best_images_selected[(x, y)] = best_list[0]
+                self.selected_images_changed.emit(x, y)
         db.close()
+        self.finished.emit()
 
     def pixels_from_model_part(self, x, y):
         box = (x*3, y*2, x*3+3, y*2+2)
@@ -53,3 +63,11 @@ class MosaicGenerator:
             offset = (x*size_images[0], y*size_images[1])
             background.paste(image, offset)
         return background
+
+    def run(self):
+        if self.run_target is None:
+            return
+        elif self.run_target == "found_best_images":
+            self.found_best_images()
+        self.run_target = None
+
