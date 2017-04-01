@@ -39,13 +39,19 @@ class DialogGraphicView(QGraphicsView):
                                     self.size_factor * 2)
 
     def update_scene_selection(self):
-        self.selection_rect.setPos(self.selected_image_index % self.image_by_line * (self.size_factor * 3 + 10),
-                                   self.selected_image_index // self.image_by_line * (self.size_factor * 2 + 10))
+        x = self.selected_image_index % self.image_by_line * (self.size_factor * 3 + 10)
+        y = self.selected_image_index // self.image_by_line * (self.size_factor * 2 + 10)
+        self.selection_rect.setPos(x, y)
 
     def mousePressEvent(self, event):
         position = event.pos()
         scene_pos = self.mapToScene(position)
-        self.selected_image_index = int( int(scene_pos.x()) // (self.size_factor * 3 + 10)
-                                         + int(scene_pos.y()) // (self.size_factor * 2 + 10) * self.image_by_line)
-        print(self.selected_image_index)
-        self.update_scene_selection()
+        x = int(scene_pos.x()) // (self.size_factor * 3 + 10)
+        y = int(scene_pos.y()) // (self.size_factor * 2 + 10) * self.image_by_line
+        if x >= 0 and \
+                        y >= 0 and \
+                        x < self.image_by_line and \
+                        y < len(self.images) / 3:
+            self.selected_image_index = x + y
+            print(self.selected_image_index)
+            self.update_scene_selection()
