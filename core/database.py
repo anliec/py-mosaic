@@ -30,6 +30,11 @@ class DataBase:
                                             );''')
         return
 
+    def get_number_of_photo(self):
+        cur = self.con.cursor()
+        cur.execute('''SELECT COUNT(*) FROM photos''')
+        return int(cur.fetchone()[0])
+
     def __init__(self):
         self.con = lite.connect('photos.db')
         cur = self.con.cursor()

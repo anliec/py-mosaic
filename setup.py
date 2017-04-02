@@ -1,12 +1,12 @@
 from distutils.core import setup
 
 setup(
-    name='Photos',
+    name='Mosaic',
     version='alpha',
-    packages=[''],
+    packages=['GUI', 'core', ],
     url='',
-    license='',
+    license='GNU General Public License V3 (GPLv3)',
     author='nicolas',
-    author_email='',
+    author_email='nicolas.six@pau.fr',
     description=''
 )

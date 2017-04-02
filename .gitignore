@@ -1,0 +1,5 @@
+*.db
+ui_*.py
+build/*
+photosForTests/*
+.idea/*
