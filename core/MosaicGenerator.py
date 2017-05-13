@@ -18,8 +18,8 @@ class MosaicGenerator(QThread):
     target_im = None
 
     #signals
-    selected_images_changed = pyqtSignal(int, int)
-    finished = pyqtSignal()
+    # selected_images_changed = pyqtSignal(int, int)
+    # finished = pyqtSignal()
     #threading
     run_target = None
 
@@ -43,9 +43,9 @@ class MosaicGenerator(QThread):
                 best_list = db.get_bests_candidates(target_pixels)
                 self.best_images_found[(x, y)] = best_list
                 self.best_images_selected[(x, y)] = best_list[0]
-                self.selected_images_changed.emit(x, y)
+                # self.selected_images_changed.emit(x, y)
         db.close()
-        self.finished.emit()
+        # self.finished.emit()
 
     def pixels_from_model_part(self, x, y):
         box = (x*3, y*2, x*3+3, y*2+2)

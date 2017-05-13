@@ -59,7 +59,7 @@ class DataBase:
         # take image ratio from 1:1 to 2:1
         if (size[0] // size[1]) != 1:
             # if image ration is not good skip the image
-            print(picture_path + " was not the good ration: " + str(size[0]) + ":" + str(size[1]))
+            print(picture_path + " don't have the good ratio: " + str(size[0]) + ":" + str(size[1]))
             return
         pixels = PhotosManaging.pixelize(PhotosManaging.miniaturize(image))
         data = (picture_path, pixels[0][0], pixels[0][1], pixels[0][2],

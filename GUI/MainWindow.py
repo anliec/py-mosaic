@@ -23,8 +23,8 @@ class MainWindow(QMainWindow):
     timer = None
     photo_selection_dialog = None
 
-    def __init__(self):
-        super(MainWindow, self).__init__()
+    def __init__(self, parent=None):
+        super().__init__()
         # setup ui
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -36,13 +36,13 @@ class MainWindow(QMainWindow):
         self.photo_selection_dialog = DialogGraphicView(list())
         self.photo_selection_dialog.size_factor = self.preview_factor
         # add it into a dock widget
-        dock_widget = QDockWidget("Picture selection", self)
+        dock_widget = QDockWidget(self.tr("Picture selection"), self)
         dock_widget.setWidget(self.photo_selection_dialog)
         self.addDockWidget(Qt.RightDockWidgetArea, dock_widget)
         # setup status bar
-        self.ui.statusbar.showMessage("Ready")
+        self.ui.statusbar.showMessage(self.tr("Ready"))
         # set window title
-        self.setWindowTitle("Mosaic Creator")
+        self.setWindowTitle(self.tr("Mosaic Creator"))
         # connection
         self.ui.pb_open.clicked.connect(self.open_button_clicked)
         self.ui.pb_compute.clicked.connect(self.compute_button_clicked)
@@ -77,12 +77,12 @@ class MainWindow(QMainWindow):
         self.preview_widget.generator.finished.connect(self.compute_finished)
         # self.preview_widget.generator.selected_images_changed[int, int].connect(self.new_image_selected)
         self.preview_widget.generator.run_target = "found_best_images"
-        self.ui.statusbar.showMessage("Computing")
+        self.ui.statusbar.showMessage(self.tr("Computing"))
         self.preview_widget.generator.start()
 
     def compute_finished(self):
         self.preview_widget.update_all_scene()
-        self.ui.statusbar.showMessage("Ready")
+        self.ui.statusbar.showMessage(self.tr("Ready"))
         self.preview_widget.generator.finished.disconnect(self.compute_finished)
         self.ui.pb_export.setEnabled(True)
         # image_dict = self.preview_widget.generator.best_images_found
@@ -121,9 +121,11 @@ class MainWindow(QMainWindow):
         self.timer.start(100)
 
     def open_exploration_window(self):
-        print("open !")
         self.timer = None
         self.exploration_window.explore()
+        self.exploration_window.finished.connect(self.on_exploration_window_closed)
+
+    def on_exploration_window_closed(self):
         self.setEnabled(True)
         self.exploration_window = None
 
@@ -139,7 +141,7 @@ class MainWindow(QMainWindow):
         pixmap_item.setPixmap(new_pixmap)
 
     def export_button_clicked(self):
-        file_dialog = QFileDialog(self, "Export current Mosaic as")
+        file_dialog = QFileDialog(self, self.tr("Export current Mosaic as"))
         file_dialog.setAcceptMode(QFileDialog.AcceptSave)
         file_dialog.setDefaultSuffix("png")
         file_dialog.setVisible(True)
@@ -147,9 +149,8 @@ class MainWindow(QMainWindow):
 
     def warning_message_empty_db(self):
         message_box = QMessageBox(QMessageBox.Warning,
-                                  "Empty DataBase",
-                                  "Your photo database is currently empty.\n" +
-                                  "Please go to \"File/exlore new path...\" to add files in it.",
+                                  self.tr("Empty DataBase"),
+                                  self.tr("Your photo database is currently empty.\nPlease go to \"File\"/\"explore new path...\" to add files in it."),
                                   QMessageBox.Ok,
                                   self)
         message_box.show()
