@@ -44,10 +44,10 @@ class MainWindow(QMainWindow):
         self.ui.statusbar.showMessage(self.tr("Ready"))
         # set window title
         self.setWindowTitle(self.tr("Mosaic Creator"))
+        # set menu
+        self.ui.actionExport.setEnabled(False)
         # connection
-        self.ui.pb_open.clicked.connect(self.open_button_clicked)
-        self.ui.pb_compute.clicked.connect(self.compute_button_clicked)
-        self.ui.pb_export.clicked.connect(self.export_button_clicked)
+        self.ui.actionExport.triggered.connect(self.export_button_clicked)
         self.ui.actionExplore_new_path.triggered.connect(self.explore_new_path)
         self.ui.actionQuit.triggered.connect(self.close)
         self.preview_widget.selection_updated.connect(self.new_image_selected)
@@ -60,36 +60,27 @@ class MainWindow(QMainWindow):
         if database.get_number_of_photo() == 0:
             self.warning_message_empty_db()
 
-    def open_button_clicked(self):
-        file_dialog = QFileDialog(self)
-        file_dialog.setVisible(True)
-        file_dialog.fileSelected[str].connect(self.file_chosen)
-
-    def file_chosen(self, file_path):
-        self.preview_widget.target_path = file_path
-        self.preview_widget.set_generator(None)
-        self.ui.label.setEnabled(True)
-        self.ui.label_2.setEnabled(True)
-        self.ui.sb_im_h.setEnabled(True)
-        self.ui.sb_im_v.setEnabled(True)
-        self.ui.pb_compute.setEnabled(True)
-        self.ui.pb_export.setEnabled(False)
-
-    def compute_button_clicked(self):
-        self.preview_widget.set_generator(MosaicGenerator.MosaicGenerator(self.preview_widget.target_path,
-                          (self.ui.sb_im_h.value(),
-                           self.ui.sb_im_v.value())))
+    def on_new_mosaic_menu_finished(self):
+        target_path = self.new_mosaic_dialog.ui.le_im_path.text()
+        number_of_image_h = self.new_mosaic_dialog.ui.sb_im_h.value()
+        number_of_image_v = self.new_mosaic_dialog.ui.sb_im_v.value()
+        self.new_mosaic_dialog.close()
+        self.preview_widget.set_generator(MosaicGenerator.MosaicGenerator(target_path,
+                                                                          (number_of_image_h,
+                                                                           number_of_image_v)))
         self.preview_widget.generator.finished.connect(self.compute_finished)
         # self.preview_widget.generator.selected_images_changed[int, int].connect(self.new_image_selected)
         self.preview_widget.generator.run_target = "found_best_images"
         self.ui.statusbar.showMessage(self.tr("Computing"))
         self.preview_widget.generator.start()
+        self.ui.actionExport.setEnabled(False)
+        self.photo_selection_dialog.clear_scene()
 
     def compute_finished(self):
         self.preview_widget.update_all_scene()
         self.ui.statusbar.showMessage(self.tr("Updating preview"))
         self.preview_widget.generator.finished.disconnect(self.compute_finished)
-        self.ui.pb_export.setEnabled(True)
+        self.ui.actionExport.setEnabled(True)
 
     def on_scene_updated(self):
         self.ui.statusbar.showMessage(self.tr("Ready"))
@@ -161,16 +152,4 @@ class MainWindow(QMainWindow):
         message_box.show()
         return
 
-    def on_new_mosaic_menu_finished(self):
-        target_path = self.new_mosaic_dialog.ui.le_im_path.text()
-        number_of_image_h = self.new_mosaic_dialog.ui.sb_im_h.value()
-        number_of_image_v = self.new_mosaic_dialog.ui.sb_im_v.value()
-        self.new_mosaic_dialog.close()
-        self.preview_widget.set_generator(MosaicGenerator.MosaicGenerator(target_path,
-                                                                          (number_of_image_h,
-                                                                           number_of_image_v)))
-        self.preview_widget.generator.finished.connect(self.compute_finished)
-        # self.preview_widget.generator.selected_images_changed[int, int].connect(self.new_image_selected)
-        self.preview_widget.generator.run_target = "found_best_images"
-        self.ui.statusbar.showMessage(self.tr("Computing"))
-        self.preview_widget.generator.start()
+

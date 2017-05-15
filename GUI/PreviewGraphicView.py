@@ -35,7 +35,7 @@ class PreviewGraphicView(QGraphicsView):
         self.scene.setBackgroundBrush(self.background_brush)
         self.setScene(self.scene)
         # set help text
-        self.scene.addText(self.tr("Click on \"Open\" to chose a\npicture to transform in a mosaic.\nOr go to \"File\"/\"Explore new path...\"\nto add file into de database."))
+        self.scene.addText(self.tr("Go to \"File\"/\"New Mosaic\" to chose a\npicture to transform in a mosaic.\nOr go to \"File\"/\"Explore new path...\"\nto add file into de database."))
         # enable map style navigation
         self.setDragMode(QGraphicsView.ScrollHandDrag)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)

@@ -39,7 +39,6 @@ class NewMosaicDialog(QDialog):
         return QDialog.eventFilter(self, widget, event)
 
     def on_ok_button_clicked(self):
-        self.setEnabled(False)
         self.finished.emit()
 
     def on_cancel_button_clicked(self):

@@ -27,7 +27,7 @@ class DialogGraphicView(QGraphicsView):
 
     def update_scene(self):
         self.scene.clear()
-        if len(self.images) == 0:
+        if self.images is None or len(self.images) == 0:
             return
         print("updating scene")
         n = 0
@@ -76,6 +76,13 @@ class DialogGraphicView(QGraphicsView):
 
     def set_images(self, new_images):
         self.images = new_images
+        self.scene.clear()
+        self.pixmap_dict = dict()
+        self.selected_image_index = 0
+        self.update_scene()
+
+    def clear_scene(self):
+        self.images = None
         self.scene.clear()
         self.pixmap_dict = dict()
         self.selected_image_index = 0
