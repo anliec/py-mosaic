@@ -161,18 +161,43 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionExplore_new_path"/>
-    <addaction name="actionquit"/>
+    <addaction name="separator"/>
+    <addaction name="actionNew_mosaic"/>
+    <addaction name="actionExport"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuDataBase">
+    <property name="title">
+     <string>DataBase</string>
+    </property>
+    <addaction name="actionExplore_new_path_2"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuDataBase"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionquit">
+  <action name="actionQuit">
    <property name="text">
-    <string>quit</string>
+    <string>Quit</string>
    </property>
   </action>
   <action name="actionExplore_new_path">
+   <property name="text">
+    <string>Explore new path...</string>
+   </property>
+  </action>
+  <action name="actionNew_mosaic">
+   <property name="text">
+    <string>New mosaic</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export</string>
+   </property>
+  </action>
+  <action name="actionExplore_new_path_2">
    <property name="text">
     <string>Explore new path...</string>
    </property>

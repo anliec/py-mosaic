@@ -79,13 +79,22 @@ class DataBase:
         cur.execute(request, data)
 
     def get_bests_candidates(self, target_pixels):
+        # change here to use other computation method for error
+        # available are: 'SE' (Squared Error), 'E' (Error)
+        error_compute = "SE"
         result_list = []
         px = target_pixels
         request = 'SELECT path, '
         for i in range(0, 3):
             for j in range(0, 2):
                 for c in [('R', 0), ('G', 1), ('B', 2)]:
-                    request += 'abs(px' + str(i+1) + 'x' + str(j+1) + c[0] + '-' + str(px[i+3*j][c[1]]) + ') '
+                    if error_compute is "SE":
+                        # compute the difference on the given pixel
+                        diff = '(px' + str(i+1) + 'x' + str(j+1) + c[0] + '-' + str(px[i+3*j][c[1]]) + ') '
+                        # square this difference
+                        request += diff + '* ' + diff
+                    else:
+                        request += 'abs(px' + str(i+1) + 'x' + str(j+1) + c[0] + '-' + str(px[i+3*j][c[1]]) + ') '
                     if i != 2 or j != 1 or c[1] != 2:
                         request += '+ '
         request += 'as score '
@@ -97,7 +106,7 @@ class DataBase:
         cur.execute(request)
         rows = cur.fetchall()
         # copy the result into a list of tuples
-        for (path,score) in rows:
+        for (path, score) in rows:
             result_list.append((score, path))
         # sort the list by score ascending (may be use less as ordered by SQL)
         result_list.sort(key=lambda tup: tup[0])

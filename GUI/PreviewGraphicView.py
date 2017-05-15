@@ -2,7 +2,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-import time
 
 
 class PreviewGraphicView(QGraphicsView):
@@ -27,6 +26,7 @@ class PreviewGraphicView(QGraphicsView):
     compute_started = pyqtSignal()
     compute_finished = pyqtSignal()
     selection_updated = pyqtSignal()
+    scene_update_finished = pyqtSignal()
 
     def __init__(self):
         super(PreviewGraphicView, self).__init__()
@@ -73,6 +73,7 @@ class PreviewGraphicView(QGraphicsView):
         self.scene.setBackgroundBrush(self.background_brush)
         self.setScene(self.scene)
         self.fit_scene_in_view()
+        self.scene_update_finished.emit()
         print("preview updated")
 
     def fit_scene_in_view(self):

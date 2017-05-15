@@ -33,4 +33,5 @@ class DatabaseFiller(QThread):
                     full_path = os.path.abspath(self.current_path)
                     # add the picture to DB (size check is done in db class)
                     db.add_photo(full_path)
+        # commit and close data base connexion
         db.close()
