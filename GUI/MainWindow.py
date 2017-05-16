@@ -29,11 +29,11 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         # add preview widget
         self.preview_widget = PreviewGraphicView()
-        self.preview_widget.preview_factor = self.preview_factor
         self.centralWidget().layout().addWidget(self.preview_widget)
         # set photo selection dialogue
         self.photo_selection_dialog = DialogGraphicView(list())
-        self.photo_selection_dialog.size_factor = self.preview_factor
+        # set preview factor for te two previous widget
+        self.set_preview_factor(self.preview_factor)
         # set new mosaic dialog
         self.new_mosaic_dialog = NewMosaicDialog()
         # add it into a dock widget
@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
         self.ui.actionExport.setEnabled(False)
         # connection
         self.ui.actionExport.triggered.connect(self.export_button_clicked)
-        self.ui.actionExplore_new_path.triggered.connect(self.explore_new_path)
+        self.ui.actionExplore_new_path_2.triggered.connect(self.explore_new_path)
         self.ui.actionQuit.triggered.connect(self.close)
         self.preview_widget.selection_updated.connect(self.new_image_selected)
         self.photo_selection_dialog.selection_updated.connect(self.change_image_from_selection_widget)
@@ -60,11 +60,18 @@ class MainWindow(QMainWindow):
         if database.get_number_of_photo() == 0:
             self.warning_message_empty_db()
 
+    def set_preview_factor(self, new_preview_factor):
+        self.preview_factor = new_preview_factor
+        self.preview_widget.preview_factor = self.preview_factor
+        self.photo_selection_dialog.size_factor = self.preview_factor
+
     def on_new_mosaic_menu_finished(self):
         target_path = self.new_mosaic_dialog.ui.le_im_path.text()
         number_of_image_h = self.new_mosaic_dialog.ui.sb_im_h.value()
         number_of_image_v = self.new_mosaic_dialog.ui.sb_im_v.value()
+        preview_factor = self.new_mosaic_dialog.ui.sb_tile_width.value() / 3
         self.new_mosaic_dialog.close()
+        self.set_preview_factor(preview_factor)
         self.preview_widget.set_generator(MosaicGenerator.MosaicGenerator(target_path,
                                                                           (number_of_image_h,
                                                                            number_of_image_v)))
@@ -146,7 +153,7 @@ class MainWindow(QMainWindow):
     def warning_message_empty_db(self):
         message_box = QMessageBox(QMessageBox.Warning,
                                   self.tr("Empty DataBase"),
-                                  self.tr("Your photo database is currently empty.\nPlease go to \"File\"/\"explore new path...\" to add files in it."),
+                                  self.tr("Your photo database is currently empty.\nPlease go to \"DataBase\"/\"explore new path...\" to add files in it."),
                                   QMessageBox.Ok,
                                   self)
         message_box.show()

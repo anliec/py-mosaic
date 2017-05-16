@@ -23,7 +23,7 @@ class DialogGraphicView(QGraphicsView):
         self.images = list_of_images
         self.scene = QGraphicsScene()
         self.setScene(self.scene)
-        self.scene.addText(self.tr("Select a picture in the\nmain view to show\nhere the others\npossibility for\nthis position"))
+        self.scene.addText(self.tr("Select a picture in the\nmain view to show\nhere the others\npossibility for\nthis position."))
 
     def update_scene(self):
         self.scene.clear()
@@ -50,10 +50,11 @@ class DialogGraphicView(QGraphicsView):
         print("scene updated")
 
     def fit_scene_in_view(self):
-        self.fitInView(0, 0,
-                       self.image_by_line * (self.size_factor * 3 + 10) - 10,
-                       (len(self.images) // self.image_by_line + 1) * (self.size_factor * 2 + 10) - 10,
-                       Qt.KeepAspectRatio)
+        if self.images is not None:
+            self.fitInView(0, 0,
+                           self.image_by_line * (self.size_factor * 3 + 10) - 10,
+                           (len(self.images) // self.image_by_line + 1) * (self.size_factor * 2 + 10) - 10,
+                           Qt.KeepAspectRatio)
 
     def update_scene_selection(self):
         x = self.selected_image_index % self.image_by_line * (self.size_factor * 3 + 10)

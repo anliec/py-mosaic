@@ -4,6 +4,7 @@ SOURCES = mosaic.py\
             GUI/ExplorationWidget.py\
             GUI/dialogGraphicView.py\
             GUI/MainWindow.py\
+            GUI/NewMosaic.py
             core/MosaicGenerator.py\
             core/FindPhotos.py\
             core/databaseFiller.py\
@@ -13,7 +14,8 @@ SOURCES = mosaic.py\
 
 FORMS = GUI/dialogphotos.ui\
         GUI/explorationwindows.ui\
-        GUI/mainwindow.ui
+        GUI/mainwindow.ui\
+        GUI/NewMosaic.ui
 
 TRANSLATIONS = mosaic_fr.ts
 

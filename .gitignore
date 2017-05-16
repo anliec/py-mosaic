@@ -1,5 +1,9 @@
 *.db
-ui_*.py
+dist/*
 build/*
 photosForTests/*
 .idea/*
+*__pycache__*
+*.pro.user
+MANIFEST
+*.spec
