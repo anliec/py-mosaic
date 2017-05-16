@@ -26,8 +26,8 @@ class NewMosaicDialog(QDialog):
         # connection
         self.ui.pb_ok.clicked.connect(self.on_ok_button_clicked)
         self.ui.pb_cancel.clicked.connect(self.on_cancel_button_clicked)
-        self.ui.sb_im_h.valueChanged.connect(self.on_number_of_image_h_changed)
-        self.ui.sb_im_v.valueChanged.connect(self.on_number_of_image_v_changed)
+        self.ui.sb_im_h.editingFinished.connect(self.on_number_of_image_h_changed)
+        self.ui.sb_im_v.editingFinished.connect(self.on_number_of_image_v_changed)
         self.ui.pb_browse.clicked.connect(self.on_browse_button_clicked)
         self.ui.le_im_path.textChanged.connect(self.on_text_field_path_set)
         self.ui.sb_tile_height.editingFinished.connect(self.on_height_of_tile_changed)
@@ -83,7 +83,7 @@ class NewMosaicDialog(QDialog):
             elif num_im_v <= self.ui.sb_im_v.minimum():
                 self.ui.sb_im_v.setValue(self.ui.sb_im_v.minimum())
             # else just ensure size synchronisation
-            else:
+            elif abs(num_im_v - self.ui.sb_im_v.value()) > 1:
                 self.ui.cb_keep_aspect_ratio.setChecked(False)
                 self.ui.sb_im_v.setValue(num_im_v)
                 self.ui.cb_keep_aspect_ratio.setChecked(True)
@@ -98,7 +98,7 @@ class NewMosaicDialog(QDialog):
             elif num_im_h <= self.ui.sb_im_h.minimum():
                 self.ui.sb_im_h.setValue(self.ui.sb_im_h.minimum())
             # else just ensure size synchronisation
-            else:
+            elif abs(num_im_h - self.ui.sb_im_h.value()) > 1:
                 self.ui.cb_keep_aspect_ratio.setChecked(False)
                 self.ui.sb_im_h.setValue(num_im_h)
                 self.ui.cb_keep_aspect_ratio.setChecked(True)

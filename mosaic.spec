@@ -5,7 +5,7 @@ block_cipher = None
 
 a = Analysis(['mosaic.py'],
              pathex=['/home/nicolas/Documents/Programation/Python/Photos'],
-             binaries=[],
+             binaries=[('mosaic_fr.qm', '.')],
              datas=[],
              hiddenimports=[],
              hookspath=[],
