@@ -7,7 +7,7 @@ def image_from_path(image_path):
 
 
 def miniaturize(image):
-    return image.resize((3, 2))
+    return image.resize((6, 4))
 
 
 def miniature_image_pixels(image_path):

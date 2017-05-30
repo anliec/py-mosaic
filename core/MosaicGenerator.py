@@ -17,10 +17,11 @@ class MosaicGenerator(QThread):
     model_im = None
     target_im = None
 
-    #signals
+    # signals
     # selected_images_changed = pyqtSignal(int, int)
     # finished = pyqtSignal()
-    #threading
+
+    # threading
     run_target = None
 
     def __init__(self, path_to_model, number_of_images):
@@ -28,12 +29,11 @@ class MosaicGenerator(QThread):
         self.number_of_image = number_of_images
         self.model_path = path_to_model
         self.model_im = Image.open(self.model_path)
-        self.target_im = self.model_im.resize((3*self.number_of_image[0], 2*self.number_of_image[1]))
+        self.target_im = self.model_im.resize((6*self.number_of_image[0], 4*self.number_of_image[1]))
 
     def found_best_images(self):
-        '''set best_images_found with the best possible result from DB
-
-        set the best_image_selected using the highest score'''
+        """set best_images_found with the best possible result from DB
+        set the best_image_selected using the highest score"""
         self.best_images_found = dict()
         self.best_images_selected = dict()
         db = database.DataBase()
@@ -48,7 +48,7 @@ class MosaicGenerator(QThread):
         # self.finished.emit()
 
     def pixels_from_model_part(self, x, y):
-        box = (x*3, y*2, x*3+3, y*2+2)
+        box = (x*6, y*4, x*6+6, y*4+4)
         region = self.target_im.crop(box)
         return PhotosManaging.pixelize(region)
 

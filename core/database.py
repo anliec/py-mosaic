@@ -7,27 +7,16 @@ class DataBase:
 
     def create_photo_table(self):
         cur = self.con.cursor()
-        cur.execute('''CREATE TABLE photos( id INTEGER primary key,
-                                            path VARCHAR UNIQUE,
-                                            px1x1R TINYINT,
-                                            px1x1G TINYINT,
-                                            px1x1B TINYINT,
-                                            px2x1R TINYINT,
-                                            px2x1G TINYINT,
-                                            px2x1B TINYINT,
-                                            px3x1R TINYINT,
-                                            px3x1G TINYINT,
-                                            px3x1B TINYINT,
-                                            px1x2R TINYINT,
-                                            px1x2G TINYINT,
-                                            px1x2B TINYINT,
-                                            px2x2R TINYINT,
-                                            px2x2G TINYINT,
-                                            px2x2B TINYINT,
-                                            px3x2R TINYINT,
-                                            px3x2G TINYINT,
-                                            px3x2B TINYINT
-                                            );''')
+        create_table_request = "CREATE TABLE photos( id INTEGER primary key, path VARCHAR UNIQUE"
+        # generate a column for every color of every 6x4 pixels
+        for x in range(1, 7):
+            for y in range(1, 5):
+                for c in ["R", "G", "B"]:
+                    create_table_request += ", px" + str(x) + "x" + str(y) + c + " TINYINT"
+        # close request
+        create_table_request += ");"
+        # execute request
+        cur.execute(create_table_request)
         return
 
     def get_number_of_photo(self):
@@ -47,9 +36,11 @@ class DataBase:
     def close(self):
         self.commit()
         self.con.close()
+        return
 
     def commit(self):
         self.con.commit()
+        return
 
     def add_photo(self, picture_path):
         """add the given picture to DB if the image as the good ratio (3:2)"""
@@ -62,21 +53,23 @@ class DataBase:
             print(picture_path + " don't have the good ratio: " + str(size[0]) + ":" + str(size[1]))
             return
         pixels = PhotosManaging.pixelize(PhotosManaging.miniaturize(image))
-        data = (picture_path, pixels[0][0], pixels[0][1], pixels[0][2],
-                    pixels[1][0], pixels[1][1], pixels[1][2],
-                    pixels[2][0], pixels[2][1], pixels[2][2],
-                    pixels[3][0], pixels[3][1], pixels[3][2],
-                    pixels[4][0], pixels[4][1], pixels[4][2],
-                    pixels[5][0], pixels[5][1], pixels[5][2])
-        request = '''INSERT OR IGNORE INTO photos (
-                    path,px1x1R,px1x1G,px1x1B,
-                    px2x1R,px2x1G,px2x1B,
-                    px3x1R,px3x1G,px3x1B,
-                    px1x2R,px1x2G,px1x2B,
-                    px2x2R,px2x2G,px2x2B,
-                    px3x2R,px3x2G,px3x2B
-                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
+        data = (picture_path,)
+        request = "INSERT OR IGNORE INTO photos (path"
+        request_value = " VALUES (?"
+        for x in range(1, 7):
+            for y in range(1, 5):
+                for c in [("R", 0), ("G", 1), ("B", 2)]:
+                    # add the current color to the data tuple
+                    data += (pixels[(y-1)*6+x-1][c[1]],)
+                    # add the current color to the request
+                    request += ", px" + str(x) + "x" + str(y) + c[0]
+                    # and add a value field at the end of the request
+                    request_value += ",?"
+        # finish the request generation
+        request += ")" + request_value + ")"
+        # execute request
         cur.execute(request, data)
+        return
 
     def get_bests_candidates(self, target_pixels):
         # change here to use other computation method for error
@@ -85,17 +78,17 @@ class DataBase:
         result_list = []
         px = target_pixels
         request = 'SELECT path, '
-        for i in range(0, 3):
-            for j in range(0, 2):
+        for i in range(0, 6):
+            for j in range(0, 4):
                 for c in [('R', 0), ('G', 1), ('B', 2)]:
                     if error_compute is "SE":
                         # compute the difference on the given pixel
-                        diff = '(px' + str(i+1) + 'x' + str(j+1) + c[0] + '-' + str(px[i+3*j][c[1]]) + ') '
+                        diff = '(px' + str(i+1) + 'x' + str(j+1) + c[0] + '-' + str(px[i+6*j][c[1]]) + ') '
                         # square this difference
                         request += diff + '* ' + diff
                     else:
-                        request += 'abs(px' + str(i+1) + 'x' + str(j+1) + c[0] + '-' + str(px[i+3*j][c[1]]) + ') '
-                    if i != 2 or j != 1 or c[1] != 2:
+                        request += 'abs(px' + str(i+1) + 'x' + str(j+1) + c[0] + '-' + str(px[i+6*j][c[1]]) + ') '
+                    if i != 5 or j != 3 or c[1] != 2:
                         request += '+ '
         request += 'as score '
         request += 'FROM photos '
