@@ -1,5 +1,6 @@
 import sqlite3 as lite
 from core import PhotosManaging
+from PIL import ExifTags
 
 
 class DataBase:
@@ -46,6 +47,21 @@ class DataBase:
         """add the given picture to DB if the image as the good ratio (3:2)"""
         cur = self.con.cursor()
         image = PhotosManaging.image_from_path(picture_path)
+        # check Exif information for rotation
+        try:
+            for orientation in ExifTags.TAGS.keys():
+                if ExifTags.TAGS[orientation] == 'Orientation': break
+            exif = dict(image._getexif().items())
+            # if the image is upside down, rotate it's just +/-90° rotation return
+            if exif[orientation] == 3:
+                image = image.rotate(180, expand=True)
+            elif exif[orientation] == 6:
+                return
+            elif exif[orientation] == 8:
+                return
+        except:
+            # exception raised if the picture is not jpeg or has no exif data.
+            pass
         size = image.size
         # take image ratio from 1:1 to 2:1
         if (size[0] // size[1]) != 1:
