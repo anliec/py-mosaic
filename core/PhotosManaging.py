@@ -3,7 +3,13 @@ from PIL import Image
 
 
 def image_from_path(image_path):
-    return Image.open(image_path)
+    im = Image.open(image_path)
+    im = im.convert("YCbCr")
+    return im
+
+
+def convert_to_YCbCr(image):
+    return image.convert("YCbCr")
 
 
 def miniaturize(image):

@@ -2,6 +2,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from core import GenConfig
 
 
 class PreviewGraphicView(QGraphicsView):
@@ -27,6 +28,7 @@ class PreviewGraphicView(QGraphicsView):
     compute_finished = pyqtSignal()
     selection_updated = pyqtSignal()
     scene_update_finished = pyqtSignal()
+    generator_changed = pyqtSignal()
 
     def __init__(self):
         super(PreviewGraphicView, self).__init__()
@@ -41,11 +43,17 @@ class PreviewGraphicView(QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
+    def clear_scene(self):
+        self.pixmap_items = dict()
+        self.path_to_pixmap = dict()
+        self.scene.clear()
+
     def set_generator(self, generator):
         self.generator = generator
         self.pixmap_items = dict()
         self.path_to_pixmap = dict()
         self.scene.clear()
+        self.generator_changed.emit()
 
     def update_all_scene(self):
         # self.scene.clear()
@@ -53,7 +61,8 @@ class PreviewGraphicView(QGraphicsView):
             return
         print("updating preview")
         image_dict = self.generator.best_images_selected
-        self.scene_updater_thread = ThreadedSceneUpdater(image_dict, self.preview_factor, self.path_to_pixmap)
+        self.scene_updater_thread = ThreadedSceneUpdater(image_dict, self.preview_factor, self.path_to_pixmap,
+                                                         self.generator.generator_config)
         self.scene_updater_thread.start()
         self.scene_updater_thread.finished.connect(self.scene_updated)
 
@@ -138,20 +147,23 @@ class ThreadedSceneUpdater(QThread):
     pixmap_items = dict()
     number_of_child_thread = 0
     path_to_pixmap = dict()
+    generator_config = None
 
-    def __init__(self, image_dict, preview_factor, path_to_pixmap):
+    def __init__(self, image_dict, preview_factor, path_to_pixmap, generator_config=GenConfig.GenConfig()):
         super(ThreadedSceneUpdater, self).__init__()
         self.image_dict = image_dict
         self.preview_factor = preview_factor
         self.new_scene = QGraphicsScene()
         self.path_to_pixmap = path_to_pixmap
+        self.generator_config = generator_config
 
     def run(self):
         # load every image in it own thread, launch all the thread at the same time
         thread_list = []
         for value in self.image_dict.items():
             image_path = value[1][1]
-            image_loader = ThreadedImageLoader(image_path, self.preview_factor, self.new_scene, self.pixmap_items, value[0], self.path_to_pixmap)
+            image_loader = ThreadedImageLoader(image_path, self.preview_factor, self.new_scene, self.pixmap_items,
+                                               value[0], self.path_to_pixmap, self.generator_config)
             image_loader.start()
             thread_list.append(image_loader)
         for thread in thread_list:
@@ -165,8 +177,10 @@ class ThreadedImageLoader(QThread):
     pixmap_items = None
     pos = (0, 0)
     path_to_pixmap = dict()
+    generator_config = None
 
-    def __init__(self, image_path, preview_factor, new_scene, pixmap_items, pos, path_to_pixmap):
+    def __init__(self, image_path, preview_factor, new_scene, pixmap_items, pos, path_to_pixmap,
+                 generator_config=GenConfig.GenConfig):
         super(ThreadedImageLoader, self).__init__()
         self.image_path = image_path
         self.preview_factor = preview_factor
@@ -174,6 +188,7 @@ class ThreadedImageLoader(QThread):
         self.pixmap_items = pixmap_items
         self.pos = pos
         self.path_to_pixmap = path_to_pixmap
+        self.generator_config = generator_config
 
     def run(self):
         if self.image_path in self.path_to_pixmap:
@@ -181,7 +196,11 @@ class ThreadedImageLoader(QThread):
         else:
             pixmap = QPixmap(self.image_path)
             pixmap = pixmap.scaled(3 * self.preview_factor,
-                                       2 * self.preview_factor)
+                                   2 * self.preview_factor)
+            if self.generator_config.color_type is "BW":
+                image = pixmap.toImage()
+                image = image.convertToFormat(QImage.Format_Grayscale8)
+                pixmap = QPixmap(image)
             self.path_to_pixmap[self.image_path] = pixmap
         pixmap_item = QGraphicsPixmapItem(pixmap)
         pixmap_item.setOffset(self.pos[0] * 3 * self.preview_factor,

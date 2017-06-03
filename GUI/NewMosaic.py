@@ -19,6 +19,7 @@ class NewMosaicDialog(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         # config
+        self.setModal(True)
         self.setWindowTitle(self.tr("New Mosaic"))
         self._pixmap = QPixmap()
         self.ui.lb_Image.installEventFilter(self)
@@ -32,6 +33,7 @@ class NewMosaicDialog(QDialog):
         self.ui.le_im_path.textChanged.connect(self.on_text_field_path_set)
         self.ui.sb_tile_height.editingFinished.connect(self.on_height_of_tile_changed)
         self.ui.sb_tile_width.editingFinished.connect(self.on_width_of_tile_changed)
+        self.ui.cb_grayscale.clicked.connect(self.on_gray_scale_cb_clicked)
 
     # event filter for pixmap preview
     def eventFilter(self, widget, event):
@@ -55,6 +57,7 @@ class NewMosaicDialog(QDialog):
         type_filters.append("Image files (*.png *.gif *.jpg *.jpeg *.JPG *.JPEG *.PNG)")
         self.file_dialog.setNameFilters(type_filters)
         self.file_dialog.fileSelected[str].connect(self.ui.le_im_path.setText)
+        self.file_dialog.setModal(True)
         self.file_dialog.show()
 
     def on_text_field_path_set(self):
@@ -65,6 +68,11 @@ class NewMosaicDialog(QDialog):
             self.image_size = pixmap.size()
             self.ui.pb_ok.setEnabled(True)
             self._pixmap = pixmap
+            # if the image is wanted in gray scale then adapt the preview
+            if self.ui.cb_grayscale.isChecked():
+                image = self._pixmap.toImage()
+                image = image.convertToFormat(QImage.Format_Grayscale8)
+                self._pixmap = QPixmap(image)
             self.ui.lb_Image.setPixmap(self._pixmap.scaled(
                 self.ui.lb_Image.width(), self.ui.lb_Image.height(),
                 Qt.KeepAspectRatio))
@@ -115,3 +123,14 @@ class NewMosaicDialog(QDialog):
         self.ui.sb_tile_height.setValue(tile_height)
         self.ui.sb_tile_width.setValue(tile_width)
 
+    def on_gray_scale_cb_clicked(self):
+        if self.ui.cb_grayscale.isChecked():
+            image = self._pixmap.toImage()
+            image = image.convertToFormat(QImage.Format_Grayscale8)
+            self._pixmap = QPixmap(image)
+        else:
+            image_path = self.ui.le_im_path.text()
+            self._pixmap = QPixmap(image_path)
+        self.ui.lb_Image.setPixmap(self._pixmap.scaled(
+            self.ui.lb_Image.width(), self.ui.lb_Image.height(),
+            Qt.KeepAspectRatio))

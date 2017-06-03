@@ -17,6 +17,7 @@ class ExplorationWidget(QDialog):
         # setup ui
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
+        self.setModal(True)
         self.path_to_explore = path_to_explore
         self.ui.lb_filePath.setText(path_to_explore)
 

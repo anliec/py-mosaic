@@ -2,6 +2,7 @@
 from PIL import Image
 from core import database
 from core import PhotosManaging
+from core import GenConfig
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 
@@ -12,6 +13,7 @@ class MosaicGenerator(QThread):
     best_images_selected = dict()
 
     number_of_image = (0, 0)
+    generator_config = GenConfig.GenConfig()
     # model data
     model_path = ""
     model_im = None
@@ -28,7 +30,7 @@ class MosaicGenerator(QThread):
         super(MosaicGenerator, self).__init__()
         self.number_of_image = number_of_images
         self.model_path = path_to_model
-        self.model_im = Image.open(self.model_path)
+        self.model_im = PhotosManaging.image_from_path(self.model_path)
         self.target_im = self.model_im.resize((6*self.number_of_image[0], 4*self.number_of_image[1]))
 
     def found_best_images(self):
@@ -40,7 +42,7 @@ class MosaicGenerator(QThread):
         for x in range(0, self.number_of_image[0]):
             for y in range(0, self.number_of_image[1]):
                 target_pixels = self.pixels_from_model_part(x, y)
-                best_list = db.get_bests_candidates(target_pixels)
+                best_list = db.get_bests_candidates(target_pixels, config=self.generator_config)
                 self.best_images_found[(x, y)] = best_list
                 self.best_images_selected[(x, y)] = best_list[0]
                 # self.selected_images_changed.emit(x, y)

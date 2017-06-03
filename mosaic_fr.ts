@@ -23,12 +23,12 @@
         <translation>Veuillez passienter durant l&apos;indexation des images dans la base de donnée.</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="56"/>
+        <location filename="GUI/NewMosaic.ui" line="62"/>
         <source>Source image :</source>
         <translation>Image source :</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="72"/>
+        <location filename="GUI/NewMosaic.ui" line="78"/>
         <source>Browse...</source>
         <translation>Ouvrir...</translation>
     </message>
@@ -38,64 +38,69 @@
         <translation type="obsolete">Nombre de tuilles</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="98"/>
+        <location filename="GUI/NewMosaic.ui" line="104"/>
         <source>Horizontaly :</source>
         <translation>Horizontalement :</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="112"/>
+        <location filename="GUI/NewMosaic.ui" line="118"/>
         <source>Verticaly :</source>
         <translation>Verticalement :</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="126"/>
+        <location filename="GUI/NewMosaic.ui" line="132"/>
         <source>keep image ratio</source>
         <translation>conserver le ratio</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="136"/>
+        <location filename="GUI/NewMosaic.ui" line="142"/>
         <source>Ratio :</source>
         <translation>Ratio :</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="283"/>
+        <location filename="GUI/NewMosaic.ui" line="296"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="293"/>
+        <location filename="GUI/NewMosaic.ui" line="306"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="84"/>
+        <location filename="GUI/NewMosaic.ui" line="90"/>
         <source>Tiles</source>
         <translation>Tuiles</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="90"/>
+        <location filename="GUI/NewMosaic.ui" line="96"/>
         <source>Number of tiles</source>
         <translation>Nombre de tuiles</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="148"/>
+        <location filename="GUI/NewMosaic.ui" line="154"/>
         <source>Size of tiles</source>
         <translation>Taille des tuiles</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="156"/>
+        <location filename="GUI/NewMosaic.ui" line="162"/>
         <source>Height :</source>
         <translation>Hauteur :</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="189"/>
+        <location filename="GUI/NewMosaic.ui" line="195"/>
         <source> px</source>
         <translation> px</translation>
     </message>
     <message>
-        <location filename="GUI/NewMosaic.ui" line="182"/>
+        <location filename="GUI/NewMosaic.ui" line="188"/>
         <source>Width :</source>
         <translation>Largeur :</translation>
+    </message>
+    <message>
+        <location filename="GUI/NewMosaic.ui" line="219"/>
+        <source>Gray Scale</source>
+        <translation>Nuances de gris</translation>
     </message>
 </context>
 <context>
@@ -107,7 +112,7 @@ main view to show
 here the others
 possibility for
 this position.</source>
-        <translation>Sélectionez une image
+        <translation type="obsolete">Sélectionez une image
 sur l&apos;écran principale
 affin d&apos;avoir ici des
 proposition de
@@ -167,7 +172,7 @@ remplacement.</translation>
         <translation>Sélection d&apos;image</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="86"/>
+        <location filename="GUI/MainWindow.py" line="99"/>
         <source>Ready</source>
         <translation>Prêt</translation>
     </message>
@@ -177,17 +182,17 @@ remplacement.</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="74"/>
+        <location filename="GUI/MainWindow.py" line="86"/>
         <source>Computing</source>
         <translation>Calcul en cours</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="140"/>
+        <location filename="GUI/MainWindow.py" line="145"/>
         <source>Export current Mosaic as</source>
         <translation>Exporter la Mosaique courrante comme</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="147"/>
+        <location filename="GUI/MainWindow.py" line="152"/>
         <source>Empty DataBase</source>
         <translation>Base de donnée vide</translation>
     </message>
@@ -216,7 +221,7 @@ Veillez aller dans &quot;Fichier&quot;/&quot;Explorer le dossier...&quot; pour y
         <translation>Nouvelle Mosaïque</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="81"/>
+        <location filename="GUI/MainWindow.py" line="94"/>
         <source>Updating preview</source>
         <translation>Mise à jour de l&apos;aperçu</translation>
     </message>
@@ -228,7 +233,7 @@ Please go to &quot;File&quot;/&quot;explore new path...&quot; to add files in it
 Veuillez aller dans &quot;Base de donnée&quot;/&quot;Explorer le dossier...&quot; pour y ajouter des fichiers.</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="147"/>
+        <location filename="GUI/MainWindow.py" line="152"/>
         <source>Your photo database is currently empty.
 Please go to &quot;DataBase&quot;/&quot;explore new path...&quot; to add files in it.</source>
         <translation>Votre base de donnée est vide
@@ -238,7 +243,7 @@ Veuillez aller dans &quot;Base de donnée&quot;/&quot;Explorer le dossier...&quo
 <context>
     <name>NewMosaicDialog</name>
     <message>
-        <location filename="GUI/NewMosaic.py" line="22"/>
+        <location filename="GUI/NewMosaic.py" line="23"/>
         <source>New Mosaic</source>
         <translation>Nouvelle Mosaïque</translation>
     </message>
@@ -259,7 +264,7 @@ pour ajouter des fichiers dans
 la base de donnée.</translation>
     </message>
     <message>
-        <location filename="GUI/PreviewGraphicView.py" line="38"/>
+        <location filename="GUI/PreviewGraphicView.py" line="40"/>
         <source>Go to &quot;File&quot;/&quot;New Mosaic&quot; to chose a
 picture to transform in a mosaic.
 Or go to &quot;DataBase&quot;/&quot;Explore new path...&quot;

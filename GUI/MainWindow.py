@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from GUI.ui_MainWindow import Ui_MainWindow
 from core import MosaicGenerator
 from GUI.ExplorationWidget import ExplorationWidget
-from GUI.dialogGraphicView import *
+from GUI.SelectionGraphicView import *
 from GUI.PreviewGraphicView import *
 from core.database import *
 from GUI.NewMosaic import *
@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         self.preview_widget = PreviewGraphicView()
         self.centralWidget().layout().addWidget(self.preview_widget)
         # set photo selection dialogue
-        self.photo_selection_dialog = DialogGraphicView(list())
+        self.photo_selection_dialog = SelectionGraphicView(list(), self.preview_widget.path_to_pixmap)
         # set preview factor for te two previous widget
         self.set_preview_factor(self.preview_factor)
         # set new mosaic dialog
@@ -55,6 +55,7 @@ class MainWindow(QMainWindow):
         self.ui.actionNew_mosaic.triggered.connect(self.new_mosaic_dialog.show)
         self.new_mosaic_dialog.finished.connect(self.on_new_mosaic_menu_finished)
         self.preview_widget.scene_update_finished.connect(self.on_scene_updated)
+        self.preview_widget.generator_changed.connect(self.on_preview_generator_changed)
         # checkout DB state
         database = DataBase()
         if database.get_number_of_photo() == 0:
@@ -75,12 +76,17 @@ class MainWindow(QMainWindow):
         self.preview_widget.set_generator(MosaicGenerator.MosaicGenerator(target_path,
                                                                           (number_of_image_h,
                                                                            number_of_image_v)))
+        if self.new_mosaic_dialog.ui.cb_grayscale.isChecked():
+            self.preview_widget.generator.generator_config.color_type = "BW"
+        else:
+            self.preview_widget.generator.generator_config.color_type = "color"
         self.preview_widget.generator.finished.connect(self.compute_finished)
         # self.preview_widget.generator.selected_images_changed[int, int].connect(self.new_image_selected)
         self.preview_widget.generator.run_target = "found_best_images"
         self.ui.statusbar.showMessage(self.tr("Computing"))
         self.preview_widget.generator.start()
         self.ui.actionExport.setEnabled(False)
+        self.preview_widget.clear_scene()
         self.photo_selection_dialog.clear_scene()
 
     def compute_finished(self):
@@ -108,28 +114,20 @@ class MainWindow(QMainWindow):
     #         self.pixmap_items[(x, y)] = pixmap_item
 
     def explore_new_path(self):
-        self.setEnabled(False)
         file_dialog = QFileDialog(self)
         file_dialog.setFileMode(QFileDialog.Directory)
-        file_dialog.setVisible(True)
+        file_dialog.setModal(True)
+        file_dialog.show()
         file_dialog.fileSelected[str].connect(self.set_exploration_window)
 
     def set_exploration_window(self, path):
         print(path)
-        self.timer = QTimer()
         self.exploration_window = ExplorationWidget(path)
         self.exploration_window.show()
-        self.timer.timeout.connect(self.open_exploration_window)
-        self.timer.setSingleShot(True)
-        self.timer.start(100)
-
-    def open_exploration_window(self):
-        self.timer = None
         self.exploration_window.explore()
         self.exploration_window.finished.connect(self.on_exploration_window_closed)
 
     def on_exploration_window_closed(self):
-        self.setEnabled(True)
         self.exploration_window = None
 
     def new_image_selected(self):
@@ -159,4 +157,6 @@ class MainWindow(QMainWindow):
         message_box.show()
         return
 
+    def on_preview_generator_changed(self):
+        self.photo_selection_dialog.generator_config = self.preview_widget.generator.generator_config
 

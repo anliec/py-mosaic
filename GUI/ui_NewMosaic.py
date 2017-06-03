@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(588, 414)
+        Dialog.resize(588, 432)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
@@ -26,7 +26,7 @@ class Ui_Dialog(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 362, 361))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 362, 379))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -112,6 +112,9 @@ class Ui_Dialog(object):
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.sb_tile_width)
         self.verticalLayout_6.addLayout(self.formLayout)
         self.verticalLayout_4.addWidget(self.groupBox_3)
+        self.cb_grayscale = QtWidgets.QCheckBox(self.groupBox_Tiles)
+        self.cb_grayscale.setObjectName("cb_grayscale")
+        self.verticalLayout_4.addWidget(self.cb_grayscale)
         self.verticalLayout_2.addWidget(self.groupBox_Tiles)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
@@ -164,6 +167,7 @@ class Ui_Dialog(object):
         self.sb_tile_height.setSuffix(_translate("Dialog", " px"))
         self.label_6.setText(_translate("Dialog", "Width :"))
         self.sb_tile_width.setSuffix(_translate("Dialog", " px"))
+        self.cb_grayscale.setText(_translate("Dialog", "Gray Scale"))
         self.pb_cancel.setText(_translate("Dialog", "Cancel"))
         self.pb_ok.setText(_translate("Dialog", "Ok"))
 

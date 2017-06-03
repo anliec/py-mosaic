@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from GUI.ui_dialogphotos import *
-from GUI.dialogGraphicView import *
+from GUI.SelectionGraphicView import *
 
 
 class DialogPhotos(QDialog):
@@ -13,7 +13,7 @@ class DialogPhotos(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
 
-        self.ui.graphicsView = DialogGraphicView(list_of_images)
+        self.ui.graphicsView = SelectionGraphicView(list_of_images)
 
 
 
