@@ -34,6 +34,7 @@ class NewMosaicDialog(QDialog):
         self.ui.sb_tile_height.editingFinished.connect(self.on_height_of_tile_changed)
         self.ui.sb_tile_width.editingFinished.connect(self.on_width_of_tile_changed)
         self.ui.cb_grayscale.clicked.connect(self.on_gray_scale_cb_clicked)
+        self.ui.le_im_path.textChanged.connect(self.on_number_of_image_v_changed)
 
     # event filter for pixmap preview
     def eventFilter(self, widget, event):

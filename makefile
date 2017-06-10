@@ -1,9 +1,18 @@
 
 pythonFile=$(find . -name "*.py")
+BIN=dist/mosaic/mosaic
 
-all: mosaic_fr.ts mosaic_fr.qm 
+dist: ${BIN}
 
-mosaic_fr.ts: ${pythonFile}
+${BIN}: ${pythonFile} mosaic.pro mosaic_fr.qm cpp/TilesOptimisatorlib.so
+	pyinstaller mosaic.py --add-binary ./cpp/TilesOptimisatorlib.so:cpp --add-binary ./mosaic_fr.qm:.
+
+cpp/TilesOptimisatorlib.so: cpp/TilesOptimisator.cpp cpp/TilesOptimisator.h
+	g++ -shared -o $@ -fPIC $< -O3
+
+lang: mosaic_fr.ts mosaic_fr.qm 
+
+mosaic_fr.ts: ${pythonFile} mosaic.pro
 	pylupdate5 mosaic.pro
     
 mosaic_fr.qm: mosaic_fr.ts

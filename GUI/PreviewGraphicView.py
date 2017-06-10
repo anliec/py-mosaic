@@ -16,7 +16,6 @@ class PreviewGraphicView(QGraphicsView):
     path_to_pixmap = dict()
 
     preview_factor = None  # set in MainWindow
-    image_by_line = 3
 
     scene = None
     selection_rect = None
@@ -28,6 +27,7 @@ class PreviewGraphicView(QGraphicsView):
     compute_finished = pyqtSignal()
     selection_updated = pyqtSignal()
     scene_update_finished = pyqtSignal()
+    scene_update_started = pyqtSignal()
     generator_changed = pyqtSignal()
 
     def __init__(self):
@@ -56,10 +56,10 @@ class PreviewGraphicView(QGraphicsView):
         self.generator_changed.emit()
 
     def update_all_scene(self):
-        # self.scene.clear()
         if self.generator is None:
             return
         print("updating preview")
+        self.scene_update_started.emit()
         image_dict = self.generator.best_images_selected
         self.scene_updater_thread = ThreadedSceneUpdater(image_dict, self.preview_factor, self.path_to_pixmap,
                                                          self.generator.generator_config)
@@ -70,7 +70,7 @@ class PreviewGraphicView(QGraphicsView):
         # get the new scene and pixmap dict from the thread
         self.pixmap_items = self.scene_updater_thread.pixmap_items
         self.scene = self.scene_updater_thread.new_scene
-
+        self.selected_image = (0, 0)
         self.scene.setSceneRect(0, 0,
                                 self.generator.number_of_image[0] * 3 * self.preview_factor,
                                 self.generator.number_of_image[1] * 2 * self.preview_factor)
@@ -78,6 +78,7 @@ class PreviewGraphicView(QGraphicsView):
                                                  self.selected_image[1] * 2 * self.preview_factor,
                                                  3 * self.preview_factor,
                                                  2 * self.preview_factor)
+        self.selection_updated.emit()
         # fit the new scene into the view
         self.scene.setBackgroundBrush(self.background_brush)
         self.setScene(self.scene)
@@ -145,7 +146,6 @@ class ThreadedSceneUpdater(QThread):
     preview_factor = None
     new_scene = None
     pixmap_items = dict()
-    number_of_child_thread = 0
     path_to_pixmap = dict()
     generator_config = None
 

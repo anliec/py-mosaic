@@ -54,8 +54,15 @@
     </property>
     <addaction name="actionExplore_new_path_2"/>
    </widget>
+   <widget class="QMenu" name="menuOptimisation">
+    <property name="title">
+     <string>Optimisation</string>
+    </property>
+    <addaction name="actionMin_same_picture_usage"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDataBase"/>
+   <addaction name="menuOptimisation"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionQuit">
@@ -81,6 +88,14 @@
   <action name="actionExplore_new_path_2">
    <property name="text">
     <string>Explore new path...</string>
+   </property>
+  </action>
+  <action name="actionMin_same_picture_usage">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Min. same picture usage</string>
    </property>
   </action>
  </widget>

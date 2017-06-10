@@ -45,8 +45,8 @@ class SelectionGraphicView(QGraphicsView):
             image_loader = ThreadedImageSelectionLoader(image_path, self.size_factor, self.scene, self.pixmap_dict, n,
                                                         self.image_by_line, self.path_to_pixmap_dict,
                                                         self.generator_config)
-            image_loader.start()
             thread_array.append(image_loader)
+            image_loader.start()
             n += 1
         self.selection_rect = self.scene.addRect(
                                     self.selected_image_index % self.image_by_line * (self.size_factor * 3 + 10),
@@ -77,7 +77,6 @@ class SelectionGraphicView(QGraphicsView):
         y = int(scene_pos.y()) // (self.size_factor * 2 + 10)
         if x >= 0 and y >= 0 and x < self.image_by_line and x + y * self.image_by_line < len(self.images):
             self.selected_image_index = x + y * self.image_by_line
-            print(self.selected_image_index)
             self.update_scene_selection()
             self.selection_updated.emit()
 

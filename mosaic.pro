@@ -2,9 +2,10 @@ SOURCES = mosaic.py\
             GUI/DialogPhotos.py\
             GUI/PreviewGraphicView.py\
             GUI/ExplorationWidget.py\
-            GUI/dialogGraphicView.py\
+            GUI/SelectionGraphicView.py\
             GUI/MainWindow.py\
-            GUI/NewMosaic.py
+            GUI/NewMosaic.py \
+            cpp/TilesOptimisator.cpp\
             core/MosaicGenerator.py\
             core/FindPhotos.py\
             core/databaseFiller.py\
@@ -22,3 +23,6 @@ TRANSLATIONS = mosaic_fr.ts
 CODECFORTR   = UTF-8
 
 CODECFORSRC  = UTF-8
+
+HEADERS += \
+    cpp/TilesOptimisator.h

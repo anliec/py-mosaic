@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.8
+# Created by: PyQt5 UI code generator 5.8.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -25,6 +25,8 @@ class Ui_MainWindow(object):
         self.menuFile.setObjectName("menuFile")
         self.menuDataBase = QtWidgets.QMenu(self.menubar)
         self.menuDataBase.setObjectName("menuDataBase")
+        self.menuOptimisation = QtWidgets.QMenu(self.menubar)
+        self.menuOptimisation.setObjectName("menuOptimisation")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -39,14 +41,18 @@ class Ui_MainWindow(object):
         self.actionExport.setObjectName("actionExport")
         self.actionExplore_new_path_2 = QtWidgets.QAction(MainWindow)
         self.actionExplore_new_path_2.setObjectName("actionExplore_new_path_2")
+        self.actionMin_same_picture_usage = QtWidgets.QAction(MainWindow)
+        self.actionMin_same_picture_usage.setObjectName("actionMin_same_picture_usage")
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionNew_mosaic)
         self.menuFile.addAction(self.actionExport)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionQuit)
         self.menuDataBase.addAction(self.actionExplore_new_path_2)
+        self.menuOptimisation.addAction(self.actionMin_same_picture_usage)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuDataBase.menuAction())
+        self.menubar.addAction(self.menuOptimisation.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -56,9 +62,11 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuDataBase.setTitle(_translate("MainWindow", "DataBase"))
+        self.menuOptimisation.setTitle(_translate("MainWindow", "Optimisation"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionExplore_new_path.setText(_translate("MainWindow", "Explore new path..."))
         self.actionNew_mosaic.setText(_translate("MainWindow", "New mosaic"))
         self.actionExport.setText(_translate("MainWindow", "Export"))
         self.actionExplore_new_path_2.setText(_translate("MainWindow", "Explore new path..."))
+        self.actionMin_same_picture_usage.setText(_translate("MainWindow", "Min. same picture usage"))
 

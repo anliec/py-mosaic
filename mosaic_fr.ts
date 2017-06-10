@@ -147,7 +147,7 @@ remplacement.</translation>
         <translation type="obsolete">Calculer</translation>
     </message>
     <message>
-        <location filename="GUI/mainwindow.ui" line="78"/>
+        <location filename="GUI/mainwindow.ui" line="85"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
@@ -162,37 +162,37 @@ remplacement.</translation>
         <translation type="obsolete">Quitter</translation>
     </message>
     <message>
-        <location filename="GUI/mainwindow.ui" line="83"/>
+        <location filename="GUI/mainwindow.ui" line="90"/>
         <source>Explore new path...</source>
         <translation>Explorer le dossier...</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="40"/>
+        <location filename="GUI/MainWindow.py" line="41"/>
         <source>Picture selection</source>
         <translation>Sélection d&apos;image</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="99"/>
+        <location filename="GUI/MainWindow.py" line="123"/>
         <source>Ready</source>
         <translation>Prêt</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="46"/>
+        <location filename="GUI/MainWindow.py" line="47"/>
         <source>Mosaic Creator</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="86"/>
+        <location filename="GUI/MainWindow.py" line="108"/>
         <source>Computing</source>
         <translation>Calcul en cours</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="145"/>
+        <location filename="GUI/MainWindow.py" line="168"/>
         <source>Export current Mosaic as</source>
         <translation>Exporter la Mosaique courrante comme</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="152"/>
+        <location filename="GUI/MainWindow.py" line="175"/>
         <source>Empty DataBase</source>
         <translation>Base de donnée vide</translation>
     </message>
@@ -211,17 +211,17 @@ Veillez aller dans &quot;Fichier&quot;/&quot;Explorer le dossier...&quot; pour y
         <translation>Base de donnée</translation>
     </message>
     <message>
-        <location filename="GUI/mainwindow.ui" line="63"/>
+        <location filename="GUI/mainwindow.ui" line="70"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="GUI/mainwindow.ui" line="73"/>
+        <location filename="GUI/mainwindow.ui" line="80"/>
         <source>New mosaic</source>
         <translation>Nouvelle Mosaïque</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="94"/>
+        <location filename="GUI/MainWindow.py" line="198"/>
         <source>Updating preview</source>
         <translation>Mise à jour de l&apos;aperçu</translation>
     </message>
@@ -233,11 +233,26 @@ Please go to &quot;File&quot;/&quot;explore new path...&quot; to add files in it
 Veuillez aller dans &quot;Base de donnée&quot;/&quot;Explorer le dossier...&quot; pour y ajouter des fichiers.</translation>
     </message>
     <message>
-        <location filename="GUI/MainWindow.py" line="152"/>
+        <location filename="GUI/MainWindow.py" line="175"/>
         <source>Your photo database is currently empty.
 Please go to &quot;DataBase&quot;/&quot;explore new path...&quot; to add files in it.</source>
         <translation>Votre base de donnée est vide
 Veuillez aller dans &quot;Base de donnée&quot;/&quot;Explorer le dossier...&quot; pour y ajouter des fichiers.</translation>
+    </message>
+    <message>
+        <location filename="GUI/mainwindow.ui" line="59"/>
+        <source>Optimisation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="GUI/mainwindow.ui" line="98"/>
+        <source>Min. same picture usage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="GUI/MainWindow.py" line="187"/>
+        <source>Computing optimisation</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -281,6 +296,22 @@ pour ajouter des fichiers à la base de donnée.</translation>
         <location filename="GUI/MainWindow.py" line="85"/>
         <source>Ready</source>
         <translation type="obsolete">Prêt</translation>
+    </message>
+</context>
+<context>
+    <name>SelectionGraphicView</name>
+    <message>
+        <location filename="GUI/SelectionGraphicView.py" line="32"/>
+        <source>Select a picture in the
+main view to show
+here the others
+possibility for
+this position.</source>
+        <translation type="unfinished">Sélectionez une image
+sur l&apos;écran principale
+affin d&apos;avoir ici des
+proposition de
+remplacement.</translation>
     </message>
 </context>
 </TS>
