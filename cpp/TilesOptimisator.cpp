@@ -203,8 +203,6 @@ unsigned TilesOptimisator::computeAditionnalScore(const sh_Tile &A) const
 {
     int d = getdistanceToClosestSibling(A);
     unsigned score = IMPORTANCE_FACTOR * std::exp(-d * SHARPNESS_FACTOR);
-    if(d == INT_MAX)
-        std::cout << "d max, score is : " << score << std::endl;
     return score;
 }
 
