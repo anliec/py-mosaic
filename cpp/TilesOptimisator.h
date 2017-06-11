@@ -36,8 +36,8 @@ public:
 
 protected:
     unsigned tilesDistance(const sh_Tile &A, const sh_Tile &B) const;
-    unsigned getdistanceToClosestSibling(const sh_Tile &A) const;
-    std::multimap<unsigned, sh_Tile> getDistanceToSiblings(const sh_Tile &tile) const;
+    int getdistanceToClosestSibling(const sh_Tile &A) const;
+    std::multimap<int, sh_Tile> getDistanceToSiblings(const sh_Tile &tile) const;
     unsigned computeAditionnalScore(const sh_Tile &A) const;
     void setFinalScore(sh_Tile &A) const;
 

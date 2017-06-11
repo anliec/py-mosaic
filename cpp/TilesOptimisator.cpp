@@ -114,8 +114,8 @@ void TilesOptimisator::byPictureObtimisator()
             {
                 loop = true;
                 sh_Tile &pivoTile = pivoIt->second;
-                std::multimap<unsigned, sh_Tile> siblingsByDistance = getDistanceToSiblings(pivoTile);
-                for(std::pair<unsigned, sh_Tile> siblingPair : siblingsByDistance)
+                std::multimap<int, sh_Tile> siblingsByDistance = getDistanceToSiblings(pivoTile);
+                for(std::pair<int, sh_Tile> siblingPair : siblingsByDistance)
                 {
                     if(siblingPair.first > MAX_DISTANCE_OPTIMISATION)
                         break;
@@ -158,9 +158,9 @@ unsigned TilesOptimisator::tilesDistance(const sh_Tile &A, const sh_Tile &B) con
     return std::max(distanceX, distanceY);
 }
 
-unsigned TilesOptimisator::getdistanceToClosestSibling(const sh_Tile &A) const
+int TilesOptimisator::getdistanceToClosestSibling(const sh_Tile &A) const
 {
-    unsigned clossestSibling = UINT_MAX;
+    int clossestSibling = INT_MAX;
     auto it=bestTileByNameAndScore.find(A->name);
     if(it == bestTileByNameAndScore.end())
     {
@@ -171,7 +171,7 @@ unsigned TilesOptimisator::getdistanceToClosestSibling(const sh_Tile &A) const
     for(std::pair<int, sh_Tile> pair : siblingTiles)
     {
         sh_Tile &tile = pair.second;
-        unsigned d = tilesDistance(A,tile);
+        int d = tilesDistance(A,tile);
         if(clossestSibling > d && d != 0)
         {
             clossestSibling = d;
@@ -180,9 +180,9 @@ unsigned TilesOptimisator::getdistanceToClosestSibling(const sh_Tile &A) const
     return clossestSibling;
 }
 
-std::multimap<unsigned, sh_Tile> TilesOptimisator::getDistanceToSiblings(const sh_Tile &tile) const
+std::multimap<int, sh_Tile> TilesOptimisator::getDistanceToSiblings(const sh_Tile &tile) const
 {
-    std::multimap<unsigned, sh_Tile> clossestSiblings;
+    std::multimap<int, sh_Tile> clossestSiblings;
     auto it=bestTileByNameAndScore.find(tile->name);
     if(it == bestTileByNameAndScore.end())
     {
@@ -192,18 +192,18 @@ std::multimap<unsigned, sh_Tile> TilesOptimisator::getDistanceToSiblings(const s
     for(std::pair<int, sh_Tile> pair : siblingTiles)
     {
         sh_Tile &currentTile = pair.second;
-        unsigned d = tilesDistance(tile,currentTile);
+        int d = tilesDistance(tile,currentTile);
         //add the distance to the return map
-        clossestSiblings.insert(std::pair<unsigned, sh_Tile>(d, currentTile));
+        clossestSiblings.insert(std::pair<int, sh_Tile>(d, currentTile));
     }
     return clossestSiblings;
 }
 
 unsigned TilesOptimisator::computeAditionnalScore(const sh_Tile &A) const
 {
-    unsigned d = getdistanceToClosestSibling(A);
+    int d = getdistanceToClosestSibling(A);
     unsigned score = IMPORTANCE_FACTOR * std::exp(-d * SHARPNESS_FACTOR);
-    if(d = UINT_MAX)
+    if(d == INT_MAX)
         std::cout << "d max, score is : " << score << std::endl;
     return score;
 }

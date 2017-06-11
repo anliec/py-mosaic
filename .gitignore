@@ -7,3 +7,4 @@ photosForTests/*
 *.pro.user
 MANIFEST
 *.spec
+*.pro.user

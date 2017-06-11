@@ -1,6 +1,6 @@
 #!/usr/bin/python3.6
 from ctypes import *
-
+import platform
 
 class Tile(Structure):
     _fields_ = [('name', c_char_p),
@@ -40,7 +40,7 @@ class Optimiser:
                     i += 1
 
     def call_cpp(self):
-        lib = CDLL('cpp/TilesOptimisatorlib.so')
+        lib = self.load_library()
         lib.python_main.argtypes = POINTER(Tile), c_int, c_int, c_int
         lib.python_main.restype = POINTER(Tile)
         lib.python_main(self.tile_array, self.size_x, self.size_y, self.size_n)
@@ -50,3 +50,15 @@ class Optimiser:
                 tile = self.tile_array[(x*self.size_y + y)*21]
                 self.tile_dict_ret[(x, y)] = (tile.score, tile.name.decode("utf-8"))
         print("compute finished !")
+
+    def load_library(self):
+        lib = None
+        if platform.system() == "Linux":
+            print("We are on Linux")
+            lib = CDLL('cpp/TilesOptimisatorlib.so')
+        elif platform.system() == "Windows":
+            print("We are on Windows :(")
+            lib = CDLL('cpp/TilesOptimisatorlib.dll')
+        else:
+            print("I'm not ready for this platform : " + platform.system())
+        return lib
