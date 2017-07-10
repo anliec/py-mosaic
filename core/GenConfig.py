@@ -3,7 +3,7 @@
 
 class GenConfig:
     # choose color of the output: "BW" or "color"
-    color_type = "BW"
+    color_type = "color"
     # error computation method: "SE" or "E"
     error_type = "SE"
 

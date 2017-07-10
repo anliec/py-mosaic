@@ -34,6 +34,9 @@ class SelectionGraphicView(QGraphicsView):
         self.path_to_pixmap_dict = path_to_pixmap_dict
 
     def update_scene(self):
+        # if the widget is not visible no need to update it
+        if self.isVisible() is False:
+            return
         self.scene.clear()
         if self.images is None or len(self.images) == 0:
             return
@@ -95,6 +98,9 @@ class SelectionGraphicView(QGraphicsView):
         self.scene.clear()
         self.pixmap_dict = dict()
         self.selected_image_index = 0
+        self.update_scene()
+
+    def showEvent(self, QShowEvent):
         self.update_scene()
 
 

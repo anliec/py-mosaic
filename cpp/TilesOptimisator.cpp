@@ -4,9 +4,19 @@
 
 #include <iostream>
 
-const double IMPORTANCE_FACTOR = 100000.0;
-const double SHARPNESS_FACTOR = 1.0;
-const unsigned MAX_DISTANCE_OPTIMISATION = 3; //max ditance in with the by picture optimisator will work
+#define DEBUG_INOUT
+//#define DEBUG_SCORE
+#define DEBUG_ALGO
+
+const int MAX_DISTANCE_OPTIMISATION = 3; //max ditance in with the by picture optimisator will work
+const double MAX_ADDITIONAL_SCORE = 10000000.0;
+const double MIN_ADDITIONAL_SCORE = 100000.0; //the additional score at MAX_DISTANCE_OPTIMISATION + 1
+
+//compute constantes acording to the above parameters
+const double SHARPNESS_FACTOR = std::log(MAX_ADDITIONAL_SCORE / MIN_ADDITIONAL_SCORE) / MAX_DISTANCE_OPTIMISATION;
+const double IMPORTANCE_FACTOR = MAX_ADDITIONAL_SCORE / std::exp(-SHARPNESS_FACTOR);
+//aditionnalScore is IMPORTANCE_FACTOR * exp(-d * SHARPNESS_FACTOR)
+//where minimum d value is 1
 
 extern "C" void hello()
 {
@@ -19,11 +29,23 @@ extern "C" void hello()
  */
 extern "C" void python_main(pyTiles * tiles, int sizeX, int sizeY, int sizeN)
 {
+#ifdef DEBUG_SCORE
+    std::cout << "Sharpness= " << SHARPNESS_FACTOR << "\tImportance: " << IMPORTANCE_FACTOR << std::endl;
+#endif
     TilesOptimisator opt(tiles, sizeX, sizeY, sizeN);
-    //opt.basicOptimisator();
+//    opt.basicOptimisator(10);
     opt.byPictureObtimisator();
     //generate output into the input table "tiles"
     opt.getPyTiles();
+#ifdef DEBUG_INOUT
+    std::cout << "====== C++ comm ======" << std::endl;
+    for(int i=0 ; i<sizeX*sizeY ; i++)
+    {
+        pyTiles t = tiles[i];
+        std::cout << "tile(" << std::floor(i / sizeX) << "," << i % sizeX << ") : " << t.path << std::endl;
+    }
+    std::cout << "====== Python ? ======" << std::endl;
+#endif
 }
 
 TilesOptimisator::TilesOptimisator(pyTiles * tiles, int sizeX, int sizeY, int sizeN)
@@ -110,7 +132,7 @@ void TilesOptimisator::byPictureObtimisator()
             //go to the wanted depth
             for(unsigned i=0 ; i<currentDepth && pivoIt!=samenameMap.end() ; ++i)
                 pivoIt++;
-            if(pivoIt != sameNameTiles.second.end())
+            if(pivoIt != samenameMap.end())
             {
                 loop = true;
                 sh_Tile &pivoTile = pivoIt->second;
@@ -119,13 +141,19 @@ void TilesOptimisator::byPictureObtimisator()
                 {
                     if(siblingPair.first > MAX_DISTANCE_OPTIMISATION)
                         break;
-                    sh_Tile &sibling = siblingPair.second;
-                    lookForBetterTileAtPos(sibling->posX, sibling->posY);
+                    else if(siblingPair.first != 0)
+                    {
+                        sh_Tile &sibling = siblingPair.second;
+                        lookForBetterTileAtPos(sibling->posX, sibling->posY);
+                    }
                 }
             }
         }
         currentDepth++;
     }while(loop);
+#ifdef DEBUG_ALGO
+   std::cout << "Algo finished at depth " << currentDepth << std::endl;
+#endif
 }
 
 pyTiles *TilesOptimisator::getPyTiles()
@@ -148,6 +176,18 @@ pyTiles *TilesOptimisator::getPyTiles()
         }
         x++;
     }
+
+#ifdef DEBUG_INOUT
+    std::cout << "====== Full C++ ======" << std::endl;
+    for(std::vector<std::pair<sh_Tile, std::multimap<int, sh_Tile>>> vectx : tilesByPos)
+    {
+        for(std::pair<sh_Tile, std::multimap<int, sh_Tile>> pair : vectx)
+        {
+            sh_Tile t = pair.first;
+            std::cout << "tile(" << t->posX << "," << t->posY << ") : " << t->name << std::endl;
+        }
+    }
+#endif
     return retArray;
 }
 
@@ -164,7 +204,7 @@ int TilesOptimisator::getdistanceToClosestSibling(const sh_Tile &A) const
     auto it=bestTileByNameAndScore.find(A->name);
     if(it == bestTileByNameAndScore.end())
     {
-        std::cout << A->name << " not found in map !" << std::endl;
+//        std::cout << A->name << " not found in map !" << std::endl;
         return clossestSibling;
     }
     const std::multimap<int, sh_Tile> &siblingTiles = it->second;
@@ -203,6 +243,9 @@ unsigned TilesOptimisator::computeAditionnalScore(const sh_Tile &A) const
 {
     int d = getdistanceToClosestSibling(A);
     unsigned score = IMPORTANCE_FACTOR * std::exp(-d * SHARPNESS_FACTOR);
+#ifdef DEBUG_SCORE
+    std::cout << "score bonnus is: " << score << "(unsigned)\t" << int(score) << "(int)\tfor a distance of " << d << std::endl;
+#endif
     return score;
 }
 
@@ -268,7 +311,12 @@ void TilesOptimisator::lookForBetterTileAtPos(unsigned x, unsigned y)
 
     setFinalScore(currentBestTile);
     sh_Tile bestTile = currentBestTile;
-
+#ifdef DEBUG_INOUT
+    int i=0;
+#endif
+#ifdef DEBUG_SCORE
+    std::cout << "additionnal score is: " << bestTile->scoreFinal - bestTile->scoreBase << std::endl;
+#endif
     for(std::pair<int, sh_Tile> pair : possibleTiles)
     {
         sh_Tile &t = pair.second;
@@ -276,6 +324,9 @@ void TilesOptimisator::lookForBetterTileAtPos(unsigned x, unsigned y)
         {
             if(bestTile->scoreFinal < t->scoreBase)
             {
+#ifdef DEBUG_INOUT
+                std::cout << "break ! (best tile: " << bestTile->scoreFinal << "\tt: " << t->scoreBase << "\tat loop: " << i << ")" << std::endl;
+#endif
                 //if the base score of the current tile is bigger than the best score (base scroe + something)
                 //no need to continue cherching, the folowing tile have bigger score
                 break;
@@ -291,10 +342,16 @@ void TilesOptimisator::lookForBetterTileAtPos(unsigned x, unsigned y)
                 }
             }
         }
+#ifdef DEBUG_INOUT
+        i++;
+#endif
     }
     //set the new best tile
     if(currentBestTile != bestTile)
     {
+#ifdef DEBUG_INOUT
+        std::cout << "some thing changed at(" << x << "," << y << ")" << std::endl;
+#endif
         setBestPictureAtPos(x, y, bestTile);
     }
 }

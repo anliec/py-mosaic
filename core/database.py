@@ -124,7 +124,7 @@ class DataBase:
         request += 'as score '
         request += 'FROM photos '
         request += 'ORDER BY score ASC '
-        request += 'LIMIT 0, 21 '
+        request += 'LIMIT 0, 30 '
         # execute the request
         cur = self.con.cursor()
         cur.execute(request)

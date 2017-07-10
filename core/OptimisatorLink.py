@@ -2,6 +2,7 @@
 from ctypes import *
 import platform
 
+
 class Tile(Structure):
     _fields_ = [('name', c_char_p),
                 ('score', c_int)]
@@ -32,23 +33,29 @@ class Optimiser:
         for x in range(0, number_of_image_xy[0]):
             for y in range(0, number_of_image_xy[1]):
                 tuple_list = best_images_list_by_pos[(x, y)]
+                # n = 0
                 for tuple_tile in tuple_list:
                     tile = Tile()
                     tile.score = tuple_tile[0]
                     tile.name = tuple_tile[1].encode('utf8')
                     self.tile_array[i] = tile
                     i += 1
+                    # print("tile(" + str(x) + "," + str(y) + "," + str(n) + ") : " + tuple_tile[1])
+                    # n += 1
 
     def call_cpp(self):
         lib = self.load_library()
         lib.python_main.argtypes = POINTER(Tile), c_int, c_int, c_int
-        lib.python_main.restype = POINTER(Tile)
+        # lib.python_main.restype = POINTER(Tile)
+        # execute cpp code (optimiser)
         lib.python_main(self.tile_array, self.size_x, self.size_y, self.size_n)
+        # get result into python dict
         self.tile_dict_ret = dict()
         for x in range(0, self.size_x):
             for y in range(0, self.size_y):
-                tile = self.tile_array[(x*self.size_y + y)*21]
+                tile = self.tile_array[(x*self.size_y + y)]
                 self.tile_dict_ret[(x, y)] = (tile.score, tile.name.decode("utf-8"))
+                print("tile("+str(x)+","+str(y)+") : "+tile.name.decode("utf-8"))
         print("compute finished !")
 
     def load_library(self):

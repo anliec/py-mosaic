@@ -35,7 +35,7 @@
      <x>0</x>
      <y>0</y>
      <width>559</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -60,9 +60,16 @@
     </property>
     <addaction name="actionMin_same_picture_usage"/>
    </widget>
+   <widget class="QMenu" name="menuWindows">
+    <property name="title">
+     <string>Windows</string>
+    </property>
+    <addaction name="actionPicture_Selection"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDataBase"/>
    <addaction name="menuOptimisation"/>
+   <addaction name="menuWindows"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionQuit">
@@ -96,6 +103,14 @@
    </property>
    <property name="text">
     <string>Min. same picture usage</string>
+   </property>
+  </action>
+  <action name="actionPicture_Selection">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Picture Selection</string>
    </property>
   </action>
  </widget>

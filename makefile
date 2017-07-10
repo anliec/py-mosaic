@@ -22,4 +22,4 @@ mosaic_fr.ts: ${pythonFile} mosaic.pro
 	@pylupdate5 mosaic.pro
     
 mosaic_fr.qm: mosaic_fr.ts
-	@/home/nicolas/Qt5.8/5.8/gcc_64/bin/lrelease mosaic.pro
+	@/home/nicolas/Qt/5.9.1/gcc_64/bin/lrelease mosaic.pro

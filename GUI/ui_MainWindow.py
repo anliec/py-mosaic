@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.8.2
+# Created by: PyQt5 UI code generator 5.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -19,7 +19,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 559, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 559, 19))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -27,6 +27,8 @@ class Ui_MainWindow(object):
         self.menuDataBase.setObjectName("menuDataBase")
         self.menuOptimisation = QtWidgets.QMenu(self.menubar)
         self.menuOptimisation.setObjectName("menuOptimisation")
+        self.menuWindows = QtWidgets.QMenu(self.menubar)
+        self.menuWindows.setObjectName("menuWindows")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -42,7 +44,11 @@ class Ui_MainWindow(object):
         self.actionExplore_new_path_2 = QtWidgets.QAction(MainWindow)
         self.actionExplore_new_path_2.setObjectName("actionExplore_new_path_2")
         self.actionMin_same_picture_usage = QtWidgets.QAction(MainWindow)
+        self.actionMin_same_picture_usage.setEnabled(False)
         self.actionMin_same_picture_usage.setObjectName("actionMin_same_picture_usage")
+        self.actionPicture_Selection = QtWidgets.QAction(MainWindow)
+        self.actionPicture_Selection.setCheckable(True)
+        self.actionPicture_Selection.setObjectName("actionPicture_Selection")
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionNew_mosaic)
         self.menuFile.addAction(self.actionExport)
@@ -50,9 +56,11 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionQuit)
         self.menuDataBase.addAction(self.actionExplore_new_path_2)
         self.menuOptimisation.addAction(self.actionMin_same_picture_usage)
+        self.menuWindows.addAction(self.actionPicture_Selection)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuDataBase.menuAction())
         self.menubar.addAction(self.menuOptimisation.menuAction())
+        self.menubar.addAction(self.menuWindows.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -63,10 +71,12 @@ class Ui_MainWindow(object):
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuDataBase.setTitle(_translate("MainWindow", "DataBase"))
         self.menuOptimisation.setTitle(_translate("MainWindow", "Optimisation"))
+        self.menuWindows.setTitle(_translate("MainWindow", "Windows"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionExplore_new_path.setText(_translate("MainWindow", "Explore new path..."))
         self.actionNew_mosaic.setText(_translate("MainWindow", "New mosaic"))
         self.actionExport.setText(_translate("MainWindow", "Export"))
         self.actionExplore_new_path_2.setText(_translate("MainWindow", "Explore new path..."))
         self.actionMin_same_picture_usage.setText(_translate("MainWindow", "Min. same picture usage"))
+        self.actionPicture_Selection.setText(_translate("MainWindow", "Picture Selection"))
 

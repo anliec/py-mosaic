@@ -17,6 +17,8 @@ class MainWindow(QMainWindow):
     # size of pictures is x=3*preview_factor and y=2*preview_factor
     preview_factor = 150
 
+    dock_widget = None
+
     preview_widget = None
     exploration_window = None
     timer = None
@@ -38,9 +40,10 @@ class MainWindow(QMainWindow):
         # set new mosaic dialog
         self.new_mosaic_dialog = NewMosaicDialog()
         # add the photo selection dialogue into a dock widget
-        dock_widget = QDockWidget(self.tr("Picture selection"), self)
-        dock_widget.setWidget(self.photo_selection_dialog)
-        self.addDockWidget(Qt.RightDockWidgetArea, dock_widget)
+        self.dock_widget = QDockWidget(self.tr("Picture selection"), self)
+        self.dock_widget.setWidget(self.photo_selection_dialog)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.dock_widget)
+        self.dock_widget.setVisible(False)
         # setup status bar
         self.ui.statusbar.showMessage(self.tr("Ready"))
         # set window title
@@ -60,6 +63,8 @@ class MainWindow(QMainWindow):
         self.preview_widget.scene_update_started.connect(self.on_scene_update_started)
         self.preview_widget.generator_changed.connect(self.on_preview_generator_changed)
         self.ui.actionMin_same_picture_usage.triggered.connect(self.on_optimisation_minimise_picture_double)
+        self.ui.actionPicture_Selection.triggered.connect(self.on_selection_widget_show_action_trigered)
+        self.dock_widget.visibilityChanged.connect(self.on_dockwidget_visibility_changed)
         # checkout DB state
         database = DataBase()
         if database.get_number_of_photo() == 0:
@@ -80,7 +85,6 @@ class MainWindow(QMainWindow):
         old_preview_widget = self.preview_widget
         self.preview_widget = PreviewGraphicView()
         self.centralWidget().layout().replaceWidget(old_preview_widget, self.preview_widget)
-        self.set_preview_factor(self.preview_factor)
         # update connections
         self.preview_widget.selection_updated.connect(self.new_image_selected)
         self.preview_widget.scene_update_finished.connect(self.on_scene_updated)
@@ -102,6 +106,8 @@ class MainWindow(QMainWindow):
             self.preview_widget.generator.generator_config.color_type = "BW"
         else:
             self.preview_widget.generator.generator_config.color_type = "color"
+        # generator changed, update what is needed
+        self.on_preview_generator_changed()
         self.preview_widget.generator.finished.connect(self.compute_finished)
         # self.preview_widget.generator.selected_images_changed[int, int].connect(self.new_image_selected)
         self.preview_widget.generator.run_target = "found_best_images"
@@ -181,7 +187,16 @@ class MainWindow(QMainWindow):
         return
 
     def on_preview_generator_changed(self):
+        # setup a new selection widget
+        # disable old connections
+        self.photo_selection_dialog.selection_updated.disconnect(self.change_image_from_selection_widget)
+        # replace widget in view
+        self.photo_selection_dialog = SelectionGraphicView(list(), self.preview_widget.path_to_pixmap)
         self.photo_selection_dialog.generator_config = self.preview_widget.generator.generator_config
+        self.set_preview_factor(self.preview_factor)
+        self.dock_widget.setWidget(self.photo_selection_dialog)
+        # update connections
+        self.photo_selection_dialog.selection_updated.connect(self.change_image_from_selection_widget)
 
     def on_optimisation_minimise_picture_double(self):
         self.ui.statusbar.showMessage(self.tr("Computing optimisation"))
@@ -189,10 +204,18 @@ class MainWindow(QMainWindow):
         optimisator_link = Optimiser()
         # run optimisator
         optimisator_link.set_dict(self.preview_widget.generator.best_images_found,
-                                       self.preview_widget.generator.number_of_image)
+                                  self.preview_widget.generator.number_of_image)
         optimisator_link.call_cpp()
         self.preview_widget.generator.best_images_selected = optimisator_link.tile_dict_ret
         self.preview_widget.update_all_scene()
 
     def on_scene_update_started(self):
         self.ui.statusbar.showMessage(self.tr("Updating preview"))
+
+    def on_selection_widget_show_action_trigered(self):
+        visibility = self.ui.actionPicture_Selection.isChecked()
+        self.dock_widget.setVisible(visibility)
+
+    def on_dockwidget_visibility_changed(self):
+        if not self.dock_widget.isVisible():
+            self.ui.actionPicture_Selection.setChecked(False)
